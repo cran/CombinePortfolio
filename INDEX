@@ -1,0 +1,8 @@
+CombinePortfolio-package
+                        Estimation of optimal combined portfolios based
+                        on an 8-fund rule.
+combination.rule        Function for estimating portfolio weights by
+                        the 8fund rule
+combination.rule.restriction
+                        Function for estimating portfolio weights of a
+                        restricted 8-fund rule

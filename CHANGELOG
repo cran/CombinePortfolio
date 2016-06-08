@@ -1,0 +1,6 @@
+2013-06-01  Florian Ziel <florian.ziel@web.de>
+	* DESCRIPTION (Version): New version is 0.1
+	* Estimation of 8-fund rules, and restricted 8-fund rule. Providing standard-plug-in, theta2-adjusted and psi2-adjusted estimators.
+
+
+
