@@ -64,6 +64,10 @@ and "1''2" represents the \eqn{\psi^2 }{psi^2}-adjusted 3-fund rule of Kan-Zhou(
 	crule2$delta # combination weights
 	crule2$V # target vectors
 
+	## case where T <= N - 4
+	ret2<- cbind(ret[1:10,], ret[11:20,], ret[21:30,]) ## (TxN) 10x12-matrix
+	combination.rule(ret2) ## only accessible solutions
+
 }
 
 \keyword{ Portfolio }

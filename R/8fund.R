@@ -1,9 +1,26 @@
 
+#library(MASS)
+#N<- 10
+#TT<- 60
+#ret <- mvrnorm(TT, numeric(N), diag(N))
+#gamma=1 
+#superset=1:7 
+#subset=NULL 
+#detailed.output=FALSE 
+#RHO.grid.size= 100 
+#Kmax.init= 500 
+#tail.cut.exp= 20
 
 combination.rule<- function(ret, gamma=1, superset=1:7, subset=NULL, detailed.output=FALSE, RHO.grid.size= 100, Kmax.init= 500, tail.cut.exp= 20){
 
 	TT<- dim(ret)[1]
 	N<- dim(ret)[2]
+	if(TT<= N + 4){
+		NoSigmaInv<- TRUE 
+		superset<- superset[ !(superset %in% c(1,2)) ]
+	} else {## T<= N + 4 --> no 1 or 2 or 8 rule
+		NoSigmaInv<- FALSE 
+	}
 	D<- length(superset)
 	D.set<- (1:7)[superset]
 
@@ -15,7 +32,10 @@ combination.rule<- function(ret, gamma=1, superset=1:7, subset=NULL, detailed.ou
 	atilde<- get.atilde(N=N, TT=TT)
 	a1tilde<- atilde$a1tilde #
 	a2tilde<- atilde$a2tilde #
-
+	if( NoSigmaInv ) {
+		a1tilde<- NA
+		a2tilde<- NA
+	}
 
 
 	get.aRR<- function(TT, RHO.grid.size= 200, Kmax.init= 10000, tail.cut.exp= 30, TRACE=FALSE){ ## 30
@@ -121,7 +141,7 @@ names(comb)<- cnames
 #### true A's
 get.Abvec<- function(mu, Sigma, adjust=0){
 ## adjust== 0 normal plug-in,  adjust==1 , sharphe-ratio squared plug-in, adjust==2 psi-squared adj. as KZ 3fund.
-	Sigma.inv<- solve(Sigma)
+	if(NoSigmaInv) Sigma.inv<- Sigma*NA else Sigma.inv<- solve(Sigma)
 	sinv2<- 1/diag(Sigma)
 	Sinv2 <- diag(sinv2)
 	sinv1<- sqrt(sinv2)
@@ -135,15 +155,14 @@ get.Abvec<- function(mu, Sigma, adjust=0){
 #### ADJUSTED squared sharpe ratio [adjust==1]
 	sharpe.squared<- as.numeric( mu %*% Sigma.inv %*% mu )	
 	ibeta<- function(x,a,b) pbeta(x,a,b) * beta(a,b) ## incomplete beta, see kanzhou2007
-	sharpe.squared.adj<- ((TT-N-2)*sharpe.squared - N)/TT + 2*(sharpe.squared^(N/2)*(1+ sharpe.squared)^(-(TT-2)/2))/TT/ibeta(sharpe.squared/(1+sharpe.squared), N/2, (TT-N)/2)
+	if( NoSigmaInv ) sharpe.squared.adj <- NA else  sharpe.squared.adj<- ((TT-N-2)*sharpe.squared - N)/TT + 2*(sharpe.squared^(N/2)*(1+ sharpe.squared)^(-(TT-2)/2))/TT/ibeta(sharpe.squared/(1+sharpe.squared), N/2, (TT-N)/2)
 ## 
 #### ADJUSTED psi squared [adjust==2]
 	mug<- t(ones) %*% Sigma.inv %*% mu / as.numeric( t(ones) %*% Sigma.inv %*% ones )
 	psi.squared<- as.numeric( sharpe.squared - mug * t(ones) %*% Sigma.inv %*% mu )
-	psi.squared.adj<- ((TT-N-1)*psi.squared - (N-1))/TT + 2*(psi.squared)^((N-1)/2)*(1+psi.squared)^(-(TT-2)/2)/( TT * ibeta(psi.squared/(1+psi.squared),(N-1)/2,(TT-N+1)/2))
+	if( NoSigmaInv ) psi.squared.adj <- NA else  psi.squared.adj<- ((TT-N-1)*psi.squared - (N-1))/TT + 2*(psi.squared)^((N-1)/2)*(1+psi.squared)^(-(TT-2)/2)/( TT * ibeta(psi.squared/(1+psi.squared),(N-1)/2,(TT-N+1)/2))
 ##################
 	b<- numeric(8)
-#	b[1]<- a1 * sharpe.squared.adj #t(mu) %*% Sigma.inv %*% mu
 	if(adjust==1){
 		b[1]<- a1 * sharpe.squared.adj #t(mu) %*% Sigma.inv %*% mu
 	} else if(adjust==2) {
@@ -317,8 +336,14 @@ combination.rule.restriction<- function(ret, HC, h0, rule, gamma=1, detailed.out
 	superset<- rule
 	subset<- rule
 
-		TT<- dim(ret)[1]
+	TT<- dim(ret)[1]
 	N<- dim(ret)[2]
+	if(TT<= N + 4){
+		NoSigmaInv<- TRUE 
+		superset<- superset[ !(superset %in% c(1,2)) ]
+	} else {## T<= N + 4 --> no 1 or 2 or 8 rule
+		NoSigmaInv<- FALSE 
+	}
 	D<- length(superset)
 	D.set<- (1:7)[superset]
 
@@ -330,7 +355,10 @@ combination.rule.restriction<- function(ret, HC, h0, rule, gamma=1, detailed.out
 	atilde<- get.atilde(N=N, TT=TT)
 	a1tilde<- atilde$a1tilde #
 	a2tilde<- atilde$a2tilde #
-
+	if( NoSigmaInv ) {
+		a1tilde<- NA
+		a2tilde<- NA
+	}
 
 
 	get.aRR<- function(TT, RHO.grid.size= 200, Kmax.init= 10000, tail.cut.exp= 30, TRACE=FALSE){ ## 30
@@ -400,9 +428,9 @@ combination.rule.restriction<- function(ret, HC, h0, rule, gamma=1, detailed.out
 
 	aRR<- get.aRR(TT, RHO.grid.size, Kmax.init, tail.cut.exp, FALSE)
 
-	a22tilde<- aRR[[1]] #approxfun(RHO, AFX22) ##sinv2, sinv2
-	a12tilde<- aRR[[2]] #approxfun(RHO, AFX12) ##sinv1, sinv2
-	a11tilde<- aRR[[3]] #approxfun(RHO, AFX11) ##sinv1, sinv1
+	a22tilde<- aRR[[1]] #approxfun(RHO, AFX22) ##S^{-2}, S^{-2}
+	a12tilde<- aRR[[2]] #approxfun(RHO, AFX12) ##S^{-1}, S^{-2}
+	a11tilde<- aRR[[3]] #approxfun(RHO, AFX11) ##S^{-1}, S^{-1}
 
 tr<- function(z) sum(diag(z))
 U<- function(w, m, S) as.numeric( t(w) %*% m - gamma/2 *t(w) %*% S %*% w )
@@ -436,9 +464,9 @@ names(comb)<- cnames
 #### true A's
 get.Abvec<- function(mu, Sigma, adjust=0){
 ## adjust== 0 normal plug-in,  adjust==1 , sharphe-ratio squared plug-in, adjust==2 psi-squared adj. as KZ 3fund.
-	Sigma.inv<- solve(Sigma)
+	if(NoSigmaInv) Sigma.inv<- Sigma*NA else Sigma.inv<- solve(Sigma)
 	sinv2<- 1/diag(Sigma)
-	Sinv2<- diag(sinv2)
+	Sinv2 <- diag(sinv2)
 	sinv1<- sqrt(sinv2)
 	Sinv1<- diag(sinv1)
 
@@ -450,15 +478,14 @@ get.Abvec<- function(mu, Sigma, adjust=0){
 #### ADJUSTED squared sharpe ratio [adjust==1]
 	sharpe.squared<- as.numeric( mu %*% Sigma.inv %*% mu )	
 	ibeta<- function(x,a,b) pbeta(x,a,b) * beta(a,b) ## incomplete beta, see kanzhou2007
-	sharpe.squared.adj<- ((TT-N-2)*sharpe.squared - N)/TT + 2*(sharpe.squared^(N/2)*(1+ sharpe.squared)^(-(TT-2)/2))/TT/ibeta(sharpe.squared/(1+sharpe.squared), N/2, (TT-N)/2)
+	if( NoSigmaInv ) sharpe.squared.adj <- NA else  sharpe.squared.adj<- ((TT-N-2)*sharpe.squared - N)/TT + 2*(sharpe.squared^(N/2)*(1+ sharpe.squared)^(-(TT-2)/2))/TT/ibeta(sharpe.squared/(1+sharpe.squared), N/2, (TT-N)/2)
 ## 
 #### ADJUSTED psi squared [adjust==2]
 	mug<- t(ones) %*% Sigma.inv %*% mu / as.numeric( t(ones) %*% Sigma.inv %*% ones )
 	psi.squared<- as.numeric( sharpe.squared - mug * t(ones) %*% Sigma.inv %*% mu )
-	psi.squared.adj<- ((TT-N-1)*psi.squared - (N-1))/TT + 2*(psi.squared)^((N-1)/2)*(1+psi.squared)^(-(TT-2)/2)/( TT * ibeta(psi.squared/(1+psi.squared),(N-1)/2,(TT-N+1)/2))
+	if( NoSigmaInv ) psi.squared.adj <- NA else  psi.squared.adj<- ((TT-N-1)*psi.squared - (N-1))/TT + 2*(psi.squared)^((N-1)/2)*(1+psi.squared)^(-(TT-2)/2)/( TT * ibeta(psi.squared/(1+psi.squared),(N-1)/2,(TT-N+1)/2))
 ##################
 	b<- numeric(8)
-#	b[1]<- a1 * sharpe.squared.adj #t(mu) %*% Sigma.inv %*% mu
 	if(adjust==1){
 		b[1]<- a1 * sharpe.squared.adj #t(mu) %*% Sigma.inv %*% mu
 	} else if(adjust==2) {
