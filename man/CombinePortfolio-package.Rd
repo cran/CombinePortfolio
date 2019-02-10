@@ -22,7 +22,7 @@ URL: \tab http://www.cran.r-project.org, http://www.bioconductor.org, http://www
 \author{
 Code: Florian Ziel \cr
 Documentation: Florian Ziel\cr
-Maintainer: Florian Ziel <ziel@europa-uni.de>
+Maintainer: Florian Ziel <florian.ziel@uni-due.de>
 }
 \references{
 (list of references)

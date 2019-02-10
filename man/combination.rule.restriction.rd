@@ -28,7 +28,7 @@ combination.rule.restriction(ret,  HC, h0, rule, gamma=1, detailed.output=FALSE,
 
 \author{ Florian Ziel
 \cr
-\email{ziel@europa-uni.de}
+\email{florian.ziel@uni-due.de}
 }
 
 \seealso{\code{\link{combination.rule}} }

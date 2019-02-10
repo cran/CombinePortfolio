@@ -1,8 +1,8 @@
-11b80ae73970354c30d2335ed12a2a32 *CHANGELOG
-2c320ae277a37881897ccc86b739b339 *DESCRIPTION
+3e130b23474570d2a7351cf2c2a43c87 *CHANGELOG
+16f508eb0cbab5a1e0c38eb1e4ee5929 *DESCRIPTION
 47bc1485d9de5563e29f18400414fc83 *INDEX
 b631bf29eb7c1c3a99b95113cec2c0fd *NAMESPACE
 92454ea55228c2bc8ff813624c3372a5 *R/8fund.R
-068a0967547e966628ed203649f9424a *man/CombinePortfolio-package.Rd
-536897add97e2873d5aac027f8889053 *man/combination.rule.rd
-a370fb0617c46d942ab004fe9c8bb3e5 *man/combination.rule.restriction.rd
+753ee9339efd0e16cc6e3d2c5b998cba *man/CombinePortfolio-package.Rd
+a8b05ebffd57b610c598666eccd5d2fe *man/combination.rule.rd
+f08338c1898632614557bf6189e662c5 *man/combination.rule.restriction.rd

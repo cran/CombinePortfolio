@@ -1,8 +1,12 @@
-2013-06-07  Florian Ziel <ziel@europa-uni.de>
+2016-06-07  Florian Ziel <ziel@europa-uni.de>
 	* DESCRIPTION (Version): New version is 0.2 first online available version
 	* Estimation of 8-fund rules, and restricted 8-fund rule. Providing standard-plug-in, theta2-adjusted and psi2-adjusted estimators.
 
-2013-06-09  Florian Ziel <ziel@europa-uni.de>
+2016-06-09  Florian Ziel <ziel@europa-uni.de>
 	* DESCRIPTION (Version): New version is 0.3
-	* Computes possible subset estimators if also if T <= N + 4 where some subset-rule e.g. Kan-Zhou 2-fun oder 3-fund rule have no solution.
+	* Computes possible subset estimators if also if T <= N + 4 where some subset-rule e.g. Kan-Zhou 2-fund or 3-fund rule have no solution.
+
+2019-02-10  Florian Ziel <florian.ziel@uni-due.de>
+	* DESCRIPTION (Version): New version is 0.4
+	* updated maintainer email address
 

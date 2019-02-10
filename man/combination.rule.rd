@@ -41,7 +41,7 @@ and "1''2" represents the \eqn{\psi^2 }{psi^2}-adjusted 3-fund rule of Kan-Zhou(
 
 \author{ Florian Ziel
 \cr
-\email{ziel@europa-uni.de}
+\email{florian.ziel@uni-due.de}
 }
 
 \seealso{\code{\link{combination.rule}} }
